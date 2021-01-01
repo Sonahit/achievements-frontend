@@ -1,15 +1,21 @@
 import React from "react";
 import { User } from "../entities/User";
 
-type Props = {
-  user?: User;
+export type AuthProps = InitialProps & {
+  setToken: (token: string) => void;
+  setUser: (user: Partial<User> | null) => void;
+};
+
+type InitialProps = {
+  user: Partial<User> | null;
   token: string | null;
 };
 
-const initial: Props = {
+export const authInitialProps: InitialProps = {
+  user: null,
   token: null,
 };
 
-export const AuthContext = React.createContext(initial);
-export const AuthProvider = AuthContext.Provider;
-export const AuthConsumer = AuthContext.Consumer;
+export const AuthContext = React.createContext<AuthProps>(
+  authInitialProps as any
+);
