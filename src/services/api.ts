@@ -2,54 +2,50 @@ import axios, { AxiosRequestConfig } from "axios";
 
 type RequestConfig = Omit<AxiosRequestConfig, "url">;
 
-export type GetEndpoints = {
-  "/achievements/:id":
-    | RequestConfig
-    | {
-        params: {
-          id: number;
-        };
-      };
-  "/achievements/me": RequestConfig | {};
-  "/users/me": RequestConfig | {};
+type TEndpoints<T extends Record<string, RequestConfig>> = {
+  [P in keyof T]: T[P] | RequestConfig;
 };
 
-export type PostEndpoints = {
-  "/auth/signin":
-    | RequestConfig
-    | {
-        data: {
-          login: string;
-          password: string;
-        };
-      };
+export type GetEndpoints = TEndpoints<{
+  "/achievements/:id": {
+    params: {
+      id: number;
+    };
+  };
+  "/achievements/me": {};
+  "/users/me": {};
+}>;
 
-  "/auth/signup":
-    | RequestConfig
-    | {
-        data: {
-          login: string;
-          name: string;
-          password: string;
-          confirmPassword: string;
-        };
-      };
+export type PostEndpoints = TEndpoints<{
+  "/auth/signin": {
+    data: {
+      login: string;
+      password: string;
+    };
+  };
 
-  "/auth/signout": RequestConfig | {};
+  "/auth/signup": {
+    data: {
+      login: string;
+      name: string;
+      password: string;
+      confirmPassword: string;
+    };
+  };
 
-  "/achievements/give":
-    | RequestConfig
-    | {
-        data: {
-          user: number;
-          achievemnts: number[];
-        };
-      };
-};
+  "/auth/signout": {};
 
-export type PatchEndpoints = {};
+  "/achievements/give": {
+    data: {
+      user: number;
+      achievemnts: number[];
+    };
+  };
+}>;
 
-export type PutEndpoints = {};
+export type PatchEndpoints = TEndpoints<{}>;
+
+export type PutEndpoints = TEndpoints<{}>;
 
 export type Endpoints =
   | keyof GetEndpoints
