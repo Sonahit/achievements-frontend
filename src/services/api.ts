@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 type RequestConfig = Omit<AxiosRequestConfig, "url">;
 
@@ -53,11 +53,11 @@ export type Endpoints =
   | keyof PatchEndpoints
   | keyof PutEndpoints;
 
-export const request = async <T extends Endpoints>(
+export const request = async <T extends Endpoints, Data = any>(
   path: T,
   options: RequestConfig
-) => {
-  return await axios.request({
+): Promise<AxiosResponse<Data>> => {
+  return await axios.request<Data>({
     url: path,
     ...options,
   });
@@ -66,29 +66,45 @@ export const request = async <T extends Endpoints>(
 export const get = <T extends keyof GetEndpoints>(
   path: T,
   headers?: Headers
-) => async (options?: GetEndpoints[T]) => {
-  return await request(path, { ...options, headers, method: "GET" });
+) => async <Data = any>(
+  options?: GetEndpoints[T]
+): Promise<AxiosResponse<Data>> => {
+  return await request<T, Data>(path, { ...options, headers, method: "GET" });
 };
 
 export const post = <T extends keyof PostEndpoints>(
   path: T,
   headers?: Headers
-) => async (options?: PostEndpoints[T]) => {
-  return await request(path, { ...options, headers, method: "POST" });
+) => async <Data = any>(
+  options?: PostEndpoints[T]
+): Promise<AxiosResponse<Data>> => {
+  return await request<T, Data>(path, { ...options, headers, method: "POST" });
 };
 
 export const patch = <T extends keyof PatchEndpoints>(
   path: T,
   headers?: Headers
-) => async (options?: PatchEndpoints[T]) => {
-  return await request(path, { ...(options || {}), headers, method: "PATCH" });
+) => async <Data = any>(
+  options?: PatchEndpoints[T]
+): Promise<AxiosResponse<Data>> => {
+  return await request<T, Data>(path, {
+    ...(options || {}),
+    headers,
+    method: "PATCH",
+  });
 };
 
 export const put = <T extends keyof PutEndpoints>(
   path: T,
   headers?: Headers
-) => async (options?: PutEndpoints[T]) => {
-  return await request(path, { ...(options || {}), headers, method: "PUT" });
+) => async <Data = any>(
+  options?: PutEndpoints[T]
+): Promise<AxiosResponse<Data>> => {
+  return await request<T, Data>(path, {
+    ...(options || {}),
+    headers,
+    method: "PUT",
+  });
 };
 
 export default {
