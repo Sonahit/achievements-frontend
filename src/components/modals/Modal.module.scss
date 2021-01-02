@@ -1,0 +1,32 @@
+.container {
+    position: absolute;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(63, 63, 63, 0.5);
+}
+
+.content {
+    position: relative;
+    height: 50%;
+    width: 50%;
+    background-color: white;
+}
+
+.header {
+}
+
+.close {
+    cursor: pointer;
+}
+
+.body {
+}
